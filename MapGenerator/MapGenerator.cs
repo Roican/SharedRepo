@@ -15,6 +15,7 @@ public class MapGenerator : MonoBehaviour
     [Range(0.1f, 1f), SerializeField] private float chancePathMiddle;
     [Range(0f, 1f), SerializeField] private float chancePathSide;
     [SerializeField, Range(0.9f, 5f)] private float multiplicativeSpaceBetweenLines = 2.5f;
+    [SerializeField, Range(1f, 5.5f)] private float multiplicativeNumberOfMinimunConnections = 3f;
 
     private PointOfInterest[][] _pointOfInterestsPerFloor;
     private readonly List<PointOfInterest> pointsOfInterest = new();
@@ -118,7 +119,7 @@ public class MapGenerator : MonoBehaviour
         }
 
 
-        if (_numberOfConnections <= mapLength)
+        if (_numberOfConnections <= mapLength * multiplicativeNumberOfMinimunConnections)
         {
             Debug.Log($"Recreating board with {_numberOfConnections} connections");
             RecreateBoard();
