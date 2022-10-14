@@ -11,6 +11,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int maxWidth = 5;
     [SerializeField] private float xMaxSize;
     [SerializeField] private float yPadding;
+    [SerializeField] private bool allowCrisscrossing;
     [Range(0.1f, 1f), SerializeField] private float chancePathMiddle;
     [Range(0f, 1f), SerializeField] private float chancePathSide;
     [SerializeField, Range(0.9f, 5f)] private float multiplicativeSpaceBetweenLines = 2.5f;
@@ -75,27 +76,33 @@ public class MapGenerator : MonoBehaviour
         void InstantiateNextPoint(int index_i, int index_j)
         {
             PointOfInterest nextPOI = InstantiatePointOfInterest(index_i, index_j);
-            instance.NextPointsOfInterest.Add(nextPOI);
+            AddLineBetweenPoints(instance, nextPOI);
+            instance.NextPointsOfInterestWithPath.Add(nextPOI);
             created++;
             _numberOfConnections++;
-            AddLineBetweenPoints(instance, nextPOI);
         }
 
         while (created == 0 && floorN < mapLength - 1)
         {
             if (xNum > 0 && Random.Range(0f, 1f) < chancePathSide)
             {
-                InstantiateNextPoint(floorN + 1, xNum - 1);
+                if (allowCrisscrossing || _pointOfInterestsPerFloor[floorN + 1][xNum] == null)
+                {
+                    InstantiateNextPoint(floorN + 1, xNum - 1);
+                }
+            }
+
+            if (xNum < maxWidth - 1 && Random.Range(0f, 1f) < chancePathSide)
+            {
+                if (allowCrisscrossing || _pointOfInterestsPerFloor[floorN + 1][xNum] == null)
+                {
+                    InstantiateNextPoint(floorN + 1, xNum + 1);
+                }
             }
 
             if (Random.Range(0f, 1f) < chancePathMiddle)
             {
                 InstantiateNextPoint(floorN + 1, xNum);
-            }
-
-            if (xNum < maxWidth - 1 && Random.Range(0f, 1f) < chancePathSide)
-            {
-                InstantiateNextPoint(floorN + 1, xNum + 1);
             }
         }
 
