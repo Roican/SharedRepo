@@ -78,7 +78,7 @@ public class MapGenerator : MonoBehaviour
         {
             PointOfInterest nextPOI = InstantiatePointOfInterest(index_i, index_j);
             AddLineBetweenPoints(instance, nextPOI);
-            instance.NextPointsOfInterestWithPath.Add(nextPOI);
+            instance.NextPointsOfInterest.Add(nextPOI);
             created++;
             _numberOfConnections++;
         }
